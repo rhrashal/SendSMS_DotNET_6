@@ -1,0 +1,66 @@
+﻿@page
+@using SendSMS_DotNET_6.Pages
+@model SendSMSModel 
+@*@{
+    ViewData["Title"] = "SMS SEND";
+}
+<h1>@ViewData["Title"]</h1>*@
+
+
+
+<div class="m-3 p-3">
+    <div class="text-center">
+       <h1>SMS Balance : @Model.BalanceResponse.data.balance  TK</h1>
+    </div>
+
+    <form class="form-group" method="post">
+        <div class="form-group">
+            <label for="To_Phone_Number" class="col-sm-2 control-label">To</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" required id="To_Phone_Number" onblur="valid_mobile(this.value)" name="To_Phone_Number">
+            </div>
+        </div>       
+        <div class="form-group">
+            <label for="Text_Massage" class="col-sm-2 control-label">Text</label>
+            <div class="col-sm-10">
+                <input type="text" required class="form-control" name="Text_Massage">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-outline-dark">Send</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    function valid_mobile ( value ) {
+        debugger;
+        var num="";
+    /*When value not number then try to convert bangla to english number*/
+    if (isNaN(value)) {
+        num = translteBanglaToEngNum(value);
+    }else{
+         num = value;
+    }
+    valid_number = num.match("(?:\\+88|88)?(01[3-9]\\d{8})"); /*Regular expression to validate number*/
+    /*When valid return without +88/88 number if exist*/
+    if(valid_number){
+        alert("Valid Phone Number");
+        document.getElementById("To_Phone_Number").value = valid_number.input; /*valid number method return 3 with actual input*/
+        return true;
+    } else {
+        alert("Invalid Phone Number");
+        document.getElementById("To_Phone_Number").value = "";
+        return false; /*return false when not valid*/
+    }
+}
+function translteBanglaToEngNum( num_str ){
+    var bengali = {"০":0, "১":1, "২":2, "৩":3, "৪":4, "৫":5, "৬":6, "৭":7, "৮":8, "৯":9};
+    var changed_nun='';
+    num_str.toString().split('').forEach(l => {
+        if(isNaN(l)){changed_nun += bengali[l];}else{changed_nun +=l;}
+    });
+    return changed_nun;
+}
+</script>
